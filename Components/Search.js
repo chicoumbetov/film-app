@@ -8,17 +8,30 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { films: []}
+        this.state = {
+            films: [],
+            searchedText: ""
+        }
     }
 
     _loadFilms() {
-        getFilmsFromApiWithSearchedText("star").then(data => this.setState({films: data.results }))
+        if (this.state.searchedText.length > 0) {
+            getFilmsFromApiWithSearchedText(this.state.searchedText)
+                .then(data => this.setState({films: data.results }))
+        }
+    }
+
+    _searchTextInputChanged(text) {
+        this.setState({searchedText: text})
     }
 
     render() {
         return (
             <View style={styles.main_container}>
-                <TextInput style={styles.textinput} placeholder='Titre du film'/>
+                <TextInput
+                    onChangeText={(text) => this._searchTextInputChanged(text)}
+                    style={styles.textinput} placeholder='Titre du film'
+                />
                 <Button title='Rechercher' onPress={() => this._loadFilms()}/>
                 {/* Ici j'ai simplement repris l'exemple sur la documentation de la FlatList */}
                 <FlatList
