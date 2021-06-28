@@ -10,8 +10,8 @@ class Search extends React.Component {
         super(props);
         this.state = {
             films: [],
-            searchedText: ""
         }
+        this.searchedText = ""
     }
 
     _loadFilms() {
@@ -22,7 +22,7 @@ class Search extends React.Component {
     }
 
     _searchTextInputChanged(text) {
-        this.setState({searchedText: text})
+        this.searchedText = text
     }
 
     render() {
