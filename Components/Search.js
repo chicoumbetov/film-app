@@ -11,17 +11,21 @@ class Search extends React.Component {
         this.state = {
             films: [],
         }
+        // Initialisation de notre donnée searchedText en dehors du state
         this.searchedText = ""
     }
 
+    // Seulement si le texte recherché n'est pas vide
     _loadFilms() {
-        if (this.state.searchedText.length > 0) {
-            getFilmsFromApiWithSearchedText(this.state.searchedText)
+        if (this.searchedText.length > 0) {
+            getFilmsFromApiWithSearchedText(this.searchedText)
                 .then(data => this.setState({films: data.results }))
         }
     }
 
     _searchTextInputChanged(text) {
+        // Modification du texte recherché à chaque saisie de texte,
+        // sans passer par le setState comme avant
         this.searchedText = text
     }
 
@@ -29,8 +33,10 @@ class Search extends React.Component {
         return (
             <View style={styles.main_container}>
                 <TextInput
+                    onSubmitEditing={() => this._loadFilms()}
                     onChangeText={(text) => this._searchTextInputChanged(text)}
-                    style={styles.textinput} placeholder='Titre du film'
+                    style={styles.textinput}
+                    placeholder='Titre du film'
                 />
                 <Button title='Rechercher' onPress={() => this._loadFilms()}/>
                 {/* Ici j'ai simplement repris l'exemple sur la documentation de la FlatList */}
