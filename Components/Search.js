@@ -8,7 +8,10 @@ class Search extends React.Component {
 
     constructor(props) {
         super(props);
+        // la page courante
         this.page = 0
+        // nombre de pages totales pour savoir
+        // si on a atteint la fin des retours de l'API TDMB
         this.totalPages = 0
 
         this.state = {
@@ -21,8 +24,8 @@ class Search extends React.Component {
 
     // Seulement si le texte recherché n'est pas vide
     _loadFilms() {
-        this.setState({isLoading: true})
         if (this.searchedText.length > 0) {
+            this.setState({isLoading: true})
             // +1 to call next page, otherwise we'll call always same page
             getFilmsFromApiWithSearchedText(this.searchedText, this.page+1)
                 .then(data => {
@@ -74,10 +77,17 @@ class Search extends React.Component {
                 this._loadFilms()
             }
             )
+    }
 
+    // go to FilmDetail component(page) and pass id of chosen id
+    _displayDetailForFilm = (idFilm) => {
+        // check if we get id from clicked movie
+        // console.log('_displayDetailForFilm' + idFilm)
+        this.props.navigation.navigate('FilmDetail', {idFilm: idFilm})
     }
 
     render() {
+        console.log("Search", this.props)
         return (
             <View style={styles.main_container}>
                 <TextInput
@@ -92,30 +102,33 @@ class Search extends React.Component {
                 {/* Ici j'ai simplement repris l'exemple sur la documentation de la FlatList */}
                 <FlatList
                     data={this.state.films}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({item}) => <FilmItem film={item}/>}
+                    keyExtractor={item => item.key}
+                    renderItem={({item}) => <FilmItem
+                                                film={item}
+                                                displayDetailForFilm={() => this._displayDetailForFilm()}
+                                            />}
                     // detection half screen before the end of list
                     onEndReachedThreshold={0.5}
                     onEndReached={() => {
-                        // console.log("onEndReached")
                         if (this.page < this.totalPages) {
                             this._loadFilms()
+                            // On vérifie qu'on n'a pas atteint la fin de la pagination (totalPages)
+                            // avant de charger plus d'éléments
                         }
-                    }
-                    }
+                    }}
                 />
                 {this._displayLoading()}
             </View>
         )
     }
-}
+};
 
 export default Search
 
 const styles = StyleSheet.create({
     main_container: {
         flex: 1,
-        marginTop: 20
+        // marginTop: 20
     },
     textinput: {
         marginLeft: 5,
