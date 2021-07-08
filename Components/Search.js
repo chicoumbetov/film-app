@@ -82,7 +82,7 @@ class Search extends React.Component {
     // go to FilmDetail component(page) and pass id of chosen id
     _displayDetailForFilm = (idFilm) => {
         // check if we get id from clicked movie
-        // console.log('_displayDetailForFilm' + idFilm)
+        console.log('_displayDetailForFilm', idFilm)
         this.props.navigation.navigate('FilmDetail', {idFilm: idFilm})
     }
 
@@ -103,11 +103,15 @@ class Search extends React.Component {
                 <FlatList
                     data={this.state.films}
                     keyExtractor={item => item.key}
-                    renderItem={({item}) => <FilmItem
-                                                film={item}
-                                                displayDetailForFilm={() => this._displayDetailForFilm()}
-                                            />}
+                    renderItem={
+                        ({item}) => <FilmItem
+                                       film={item}
+                                       displayDetailForFilm={() => this._displayDetailForFilm(item.id)}
+                                    />
+
+                    }
                     // detection half screen before the end of list
+                    /**
                     onEndReachedThreshold={0.5}
                     onEndReached={() => {
                         if (this.page < this.totalPages) {
@@ -116,12 +120,13 @@ class Search extends React.Component {
                             // avant de charger plus d'éléments
                         }
                     }}
+                    */
                 />
                 {this._displayLoading()}
             </View>
         )
     }
-};
+}
 
 export default Search
 
