@@ -3,10 +3,15 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Search from "./Components/Search";
 import Navigation from "./Navigation/Navigation";
+import { Provider } from "react-redux";
+import Store from './Store/configureStore'
 
 export default function App() {
   return (
-      <Navigation />
+      <Provider store={Store} >
+        <Navigation />
+      </Provider>
+
   );
 }
 
