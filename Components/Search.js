@@ -3,6 +3,7 @@ import {StyleSheet, View, TextInput, Button, FlatList, ActivityIndicator} from '
 // import { films } from '../Helpers/filmsData.js'
 import FilmItem from './FilmItem'
 import { getFilmsFromApiWithSearchedText } from "../API/TMDBApi";
+import { connect } from "react-redux";
 
 class Search extends React.Component {
 
@@ -102,16 +103,17 @@ class Search extends React.Component {
                 {/* Ici j'ai simplement repris l'exemple sur la documentation de la FlatList */}
                 <FlatList
                     data={this.state.films}
+                    extraData={this.props.favoritesFilm}
                     keyExtractor={item => item.key}
                     renderItem={
                         ({item}) => <FilmItem
                                        film={item}
+                                       isFilmFavorite={(this.props.favoritesFilm.findIndex((film) => film.id === item.id) !== -1) ? true : false}
                                        displayDetailForFilm={() => this._displayDetailForFilm(item.id)}
                                     />
 
                     }
                     // detection half screen before the end of list
-                    /**
                     onEndReachedThreshold={0.5}
                     onEndReached={() => {
                         if (this.page < this.totalPages) {
@@ -120,7 +122,6 @@ class Search extends React.Component {
                             // avant de charger plus d'éléments
                         }
                     }}
-                    */
                 />
                 {this._displayLoading()}
             </View>
@@ -128,7 +129,13 @@ class Search extends React.Component {
     }
 }
 
-export default Search
+const mapStateToProps = (state) => {
+    return {
+        favoritesFilm: state.favoritesFilm
+    }
+}
+
+export default connect(mapStateToProps) (Search)
 
 const styles = StyleSheet.create({
     main_container: {
