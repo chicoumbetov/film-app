@@ -7,6 +7,7 @@ function toggleFavorite(state = initialState, action) {
             const favoriteFilmIndex = state.favoritesFilm.findIndex(
                 (item) => item.id === action.value.id
             )
+            // findIndex  en Javascript qui retourne l'index de l'élément dans le tableau s'il existe, sinon elle renvoie -1
             // in case of presence in the array delete otherwise add:
             if (favoriteFilmIndex !== -1) {
                 // supression
